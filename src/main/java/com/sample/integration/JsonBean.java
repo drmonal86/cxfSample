@@ -1,4 +1,4 @@
-package com.connecture.integration;
+package com.sample.integration;
 
 
 public class JsonBean {
