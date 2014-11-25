@@ -57,4 +57,5 @@ public class HelloWorldIT {
         JsonBean output = parser.readValueAs(JsonBean.class);
         Assert.assertEquals("Maple", output.getVal2());
     }
+   
 }
