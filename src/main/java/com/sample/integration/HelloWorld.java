@@ -15,6 +15,11 @@ public class HelloWorld {
     @Path("/echo/{input}")
     @Produces("text/plain")
     public String ping(@PathParam("input") String input) {
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ie) {
+
+        }
         return input;
     }
 
