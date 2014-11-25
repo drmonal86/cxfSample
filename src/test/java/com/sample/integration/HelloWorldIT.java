@@ -8,12 +8,14 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.scheduling.annotation.Async;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.CountDownLatch;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 
 public class HelloWorldIT {
     private static String endpointUrl;
@@ -79,5 +89,76 @@ public class HelloWorldIT {
             ex.printStackTrace();
         }
     }
+    
+   @Ignore
+   @Test
+   public void callAsyncTest() throws Exception
+   {
+	    
+	    String testReturn =  pingTest();
+	    System.out.println(testReturn);
+   }
+   
+   @Async 
+   public String pingTest() throws Exception
+   {
+	   Client client = ClientBuilder.newBuilder().newClient();
+   		WebTarget target = client.target("http://localhost:8080" + "/cxfsample/hello/echo/SierraTangoNevada");
+   	//target = target.path("service").queryParam("a", "avalue");
+   
+   	Invocation.Builder builder = target.request();
+   	Response r = builder.get();
+   	String value = IOUtils.toString((InputStream)r.getEntity());
+   	return value;
+   }
+    
+   @Async
+    public Boolean asyncHttpClient() throws Exception{
+    	 RequestConfig requestConfig = RequestConfig.custom()
+    	            .setSocketTimeout(20000)
+    	            .setConnectTimeout(20000).build();
+    	        CloseableHttpAsyncClient httpclient = HttpAsyncClients.custom()
+    	            .setDefaultRequestConfig(requestConfig)
+    	            .build();
+    	        try {
+    	            httpclient.start();
+    	            final HttpGet[] requests = new HttpGet[] {
+    	                    new HttpGet("http://localhost:8080" + "/cxfsample/hello/echo/SierraTangoNevada"),
+    	                    new HttpGet("https://www.verisign.com/"),
+    	                    new HttpGet("http://www.google.com/")
+    	            };
+    	            final CountDownLatch latch = new CountDownLatch(requests.length);
+    	            for (final HttpGet request: requests) {
+    	                httpclient.execute(request, new FutureCallback<HttpResponse>() {
+
+    	                    public void completed(final HttpResponse response) {
+    	                        latch.countDown();
+    	                        System.out.println(request.getRequestLine() + "->" + response.getStatusLine());
+    	                    }
+
+    	                    public void failed(final Exception ex) {
+    	                        latch.countDown();
+    	                        System.out.println(request.getRequestLine() + "->" + ex);
+    	                    }
+
+    	                    public void cancelled() {
+    	                        latch.countDown();
+    	                        System.out.println(request.getRequestLine() + " cancelled");
+    	                    }
+
+    	                });
+    	            }
+    	            latch.await();
+    	            System.out.println("Shutting down");
+    	        } finally {
+    	            httpclient.close();
+    	        }
+    	        System.out.println("Done");
+				return true;
+    	
+
+    	
+    }
+    
 
 }
