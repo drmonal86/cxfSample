@@ -17,6 +17,10 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class HelloWorldIT {
     private static String endpointUrl;
@@ -57,5 +61,23 @@ public class HelloWorldIT {
         JsonBean output = parser.readValueAs(JsonBean.class);
         Assert.assertEquals("Maple", output.getVal2());
     }
-   
+
+
+    @Ignore
+    @Test
+    public void testAsyncGet() throws Exception
+    {
+        Client client = ClientBuilder.newBuilder().newClient();
+        WebTarget target = client.target("http://localhost:8080" + "/cxfsample/hello/echo/SierraTangoNevada");
+        Future myFuture = target.request().async().get();
+
+        // Block until done
+        try {
+            String myResponse = (String) myFuture.get(5, TimeUnit.SECONDS);
+
+        } catch (TimeoutException | InterruptedException | ExecutionException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
