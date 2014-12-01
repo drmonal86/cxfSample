@@ -7,6 +7,12 @@ import com.datastax.driver.core.*;
 public class SimpleClient
 {
   private Cluster cluster;
+
+  public Session getSession()
+  {
+    return session;
+  }
+
   private Session session;
 
   public void connect(String node) {

@@ -57,5 +57,6 @@ public class SimpleClientTest
     simpleClient.loadData();
     ResultSet resultSet = simpleClient.querySchema();
     assertThat(resultSet, notNullValue());
+    simpleClient.close();
   }
 }
