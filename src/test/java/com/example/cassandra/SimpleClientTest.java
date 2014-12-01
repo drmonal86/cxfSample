@@ -1,5 +1,6 @@
 package com.example.cassandra;
 
+import com.datastax.driver.core.ResultSet;
 import org.junit.*;
 
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -44,5 +45,17 @@ public class SimpleClientTest
     String clusterName = simpleClient.getConnectedClusterName();
     assertThat(clusterName, notNullValue());
     assertThat(clusterName, equalTo(CASSANDRA_CLUSTER_NAME));
+  }
+
+  @Ignore
+  @Test
+  public void returnsResultsFromQuery()
+  {
+    SimpleClient simpleClient = new SimpleClient();
+    simpleClient.connect(CASSANDRA_IP);
+    simpleClient.createSchema();
+    simpleClient.loadData();
+    ResultSet resultSet = simpleClient.querySchema();
+    assertThat(resultSet, notNullValue());
   }
 }
