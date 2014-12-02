@@ -1,11 +1,8 @@
 package com.sample.integration;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import com.example.data.StoreOrder;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 
 @Path("/hello")
@@ -31,6 +28,15 @@ public class HelloWorld {
     public Response modifyJson(JsonBean input) {
         input.setVal2(input.getVal1());
         return Response.ok().entity(input).build();
+    }
+
+    @POST
+    @Produces("application/xml")
+    @Consumes("application/xml")
+    @Path("/order")
+    public Response storeOrder(StoreOrder order) {
+
+        return Response.ok().build();
     }
 }
 
