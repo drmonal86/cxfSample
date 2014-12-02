@@ -1,7 +1,14 @@
 package com.sample.integration;
 
+import com.example.data.StoreOrder;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
+import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.junit.Assert;
@@ -11,12 +18,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.scheduling.annotation.Async;
 
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.client.*;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +40,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import java.util.concurrent.*;
+
 
 
 //@RunWith(SpringJUnit4ClassRunner.class)
@@ -103,8 +109,26 @@ public class HelloWorldIT {
             ex.printStackTrace();
         }
     }
-    
-  
+
+
+  @Ignore
+  @Test
+  public void storesOrderAndReturnsSuccess()  throws Exception
+  {
+    Client client = ClientBuilder.newBuilder().newClient();
+    WebTarget target = client.target("http://localhost:8080" + "/cxfsample/hello/order");
+    StoreOrder order = new StoreOrder();
+    order.setCustomerName("Jane Doe");
+    order.setItemName("Widget");
+    order.setOrderId(1234);
+    order.setQuantity(2);
+    order.setShippingAddress("123 E. West Ave");
+    Invocation.Builder builder = target.request(MediaType.APPLICATION_XML);
+    Response r = builder.post(Entity.xml(order));
+    Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+  }
+
+   @Ignore
    @Test
    public void pingTest() throws Exception
    {
