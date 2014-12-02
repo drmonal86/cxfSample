@@ -34,11 +34,11 @@ public class SimpleClient
   }
 
   public void createSchema() {
-    session.execute("CREATE KEYSPACE IF NOT EXISTS simplex WITH replication " +
-          "= {'class':'SimpleStrategy', 'replication_factor':3};");
+    session.execute("CREATE KEYSPACE IF NOT EXISTS testCassandra WITH replication " +
+          "= {'class':'SimpleStrategy', 'replication_factor':1};");
 
     session.execute(
-            "CREATE TABLE IF NOT EXISTS simplex.songs (" +
+            "CREATE TABLE IF NOT EXISTS testCassandra.songs (" +
                     "id uuid PRIMARY KEY," +
                     "title text," +
                     "album text," +
@@ -48,7 +48,7 @@ public class SimpleClient
                     ");");
 
     session.execute(
-            "CREATE TABLE IF NOT EXISTS simplex.playlists (" +
+            "CREATE TABLE IF NOT EXISTS testCassandra.playlists (" +
                     "id uuid," +
                     "title text," +
                     "album text, " +
@@ -61,7 +61,7 @@ public class SimpleClient
 
   public void loadData() {
     session.execute(
-            "INSERT INTO simplex.songs (id, title, album, artist, tags) " +
+            "INSERT INTO testCassandra.songs (id, title, album, artist, tags) " +
                     "VALUES (" +
                     "756716f7-2e54-4715-9f00-91dcbea6cf50," +
                     "'La Petite Tonkinoise'," +
@@ -70,7 +70,7 @@ public class SimpleClient
                     "{'jazz', '2013'})" +
                     ";");
     session.execute(
-            "INSERT INTO simplex.playlists (id, song_id, title, album, artist) " +
+            "INSERT INTO testCassandra.playlists (id, song_id, title, album, artist) " +
                     "VALUES (" +
                     "2cc9ccb7-6221-4ccb-8387-f22b6a1b354d," +
                     "756716f7-2e54-4715-9f00-91dcbea6cf50," +
@@ -88,7 +88,7 @@ public class SimpleClient
 
   public ResultSet querySchema()
   {
-    ResultSet results = session.execute("SELECT * FROM simplex.playlists " +
+    ResultSet results = session.execute("SELECT * FROM testCassandra.playlists " +
             "WHERE id = 2cc9ccb7-6221-4ccb-8387-f22b6a1b354d;");
 
     System.out.println(String.format("%-30s\t%-20s\t%-20s\n%s", "title", "album", "artist",

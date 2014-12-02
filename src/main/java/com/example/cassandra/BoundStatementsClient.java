@@ -2,8 +2,13 @@ package com.example.cassandra;
 
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.PreparedStatement;
+import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
+import com.datastax.driver.core.utils.Bytes;
 
+import java.nio.ByteBuffer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,7 +19,7 @@ public class BoundStatementsClient extends SimpleClient
   public void loadData()
   {
     PreparedStatement statement = getSession().prepare(
-            "INSERT INTO simplex.songs " +
+            "INSERT INTO testcassandra.songs " +
                     "(id, title, album, artist, tags) " +
                     "VALUES (?, ?, ?, ?, ?);");
 
@@ -51,7 +56,7 @@ public class BoundStatementsClient extends SimpleClient
 
     // Add code to create a new bound statement for inserting data into the simplex.playlists table.
     statement = getSession().prepare(
-            "INSERT INTO simplex.playlists " +
+            "INSERT INTO testcassandra.playlists " +
                     "(id, song_id, title, album, artist) " +
                     "VALUES (?, ?, ?, ?, ?);");
     boundStatement = new BoundStatement(statement);
@@ -76,6 +81,23 @@ public class BoundStatementsClient extends SimpleClient
             "Hesitation Marks",
             "Nine Inch Nails") );
 
+  }
+  
+  public byte[] getTest(){
 
+	  ByteBuffer blob=null;
+      ResultSet rows = getSession().execute("SELECT * FROM mdoctor.test_by_score");
+      byte[] results=null;
+        while(!rows.isExhausted()){
+    //  for(Row row: rows){   
+    	 
+    	        Row row= rows.one();
+    	      blob= row.getBytes("test");
+    	     results = Bytes.getArray(blob);
+    	     // result = new byte[blob.remaining()];
+    	   System.out.println(results);
+       
+    }
+        return results;
   }
 }

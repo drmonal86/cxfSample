@@ -1,6 +1,10 @@
 package com.example.cassandra;
 
+import java.nio.ByteBuffer;
+import java.util.List;
+
 import com.datastax.driver.core.ResultSet;
+
 import org.junit.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -11,7 +15,7 @@ import static org.junit.Assert.assertThat;
 
 public class BoundStatementsClientTest
 {
-  public static final String CASSANDRA_IP = "127.0.0.1";
+  public static final String CASSANDRA_IP = "172.28.65.97";
   public static final String CASSANDRA_CLUSTER_NAME = "demo_1node";
   @BeforeClass
   public static void setUpClass() throws Exception
@@ -44,5 +48,14 @@ public class BoundStatementsClientTest
     ResultSet resultSet = boundStatementsClient.querySchema();
     assertThat(resultSet, notNullValue());
     boundStatementsClient.close();
+  }
+  
+  @Ignore
+  @Test
+  public void getListClient(){
+	  BoundStatementsClient boundStatementsClient = new BoundStatementsClient();
+	    boundStatementsClient.connect(CASSANDRA_IP);
+	   byte[] rs = boundStatementsClient.getTest();
+	    boundStatementsClient.close();
   }
 }

@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.ws.rs.client.Client;
@@ -31,9 +32,22 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+
+//@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
 public class HelloWorldIT {
-    private static String endpointUrl;
+	
+	@Configuration
+	@EnableAsync
+	static class Config{
+	   
+	}
+   static String endpointUrl;
 
     @BeforeClass
     public static void beforeClass() {
@@ -90,28 +104,22 @@ public class HelloWorldIT {
         }
     }
     
-   @Ignore
+  
    @Test
-   public void callAsyncTest() throws Exception
-   {
-	    
-	    String testReturn =  pingTest();
-	    System.out.println(testReturn);
-   }
-   
-   @Async 
-   public String pingTest() throws Exception
+   public void pingTest() throws Exception
    {
 	   Client client = ClientBuilder.newBuilder().newClient();
-   		WebTarget target = client.target("http://localhost:8080" + "/cxfsample/hello/echo/SierraTangoNevada");
+    WebTarget target = client.target("http://localhost:8080" + "/cxfsample/hello/echo/HelloTest");
    	//target = target.path("service").queryParam("a", "avalue");
    
    	Invocation.Builder builder = target.request();
    	Response r = builder.get();
    	String value = IOUtils.toString((InputStream)r.getEntity());
-   	return value;
+	System.out.println(value);
+   	
    }
     
+   @Ignore
    @Async
     public Boolean asyncHttpClient() throws Exception{
     	 RequestConfig requestConfig = RequestConfig.custom()

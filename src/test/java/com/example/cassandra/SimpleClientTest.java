@@ -13,7 +13,8 @@ import static org.junit.Assert.assertThat;
 public class SimpleClientTest
 {
 
-  public static final String CASSANDRA_IP = "127.0.0.1";
+  //public static final String CASSANDRA_IP = "127.0.0.1";
+   public static final String CASSANDRA_IP = "172.28.65.97";
   public static final String CASSANDRA_CLUSTER_NAME = "demo_1node";
 
   @BeforeClass
@@ -53,8 +54,8 @@ public class SimpleClientTest
   {
     SimpleClient simpleClient = new SimpleClient();
     simpleClient.connect(CASSANDRA_IP);
-    simpleClient.createSchema();
-    simpleClient.loadData();
+   simpleClient.createSchema();
+  simpleClient.loadData();
     ResultSet resultSet = simpleClient.querySchema();
     assertThat(resultSet, notNullValue());
     simpleClient.close();
