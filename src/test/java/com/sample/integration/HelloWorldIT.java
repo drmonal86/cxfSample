@@ -1,6 +1,7 @@
 package com.sample.integration;
 
 import com.example.data.StoreOrder;
+
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.http.HttpResponse;
@@ -21,6 +22,7 @@ import org.springframework.scheduling.annotation.Async;
 import javax.ws.rs.client.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,23 +38,19 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
 import java.util.concurrent.*;
 
 
-
-//@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
 public class HelloWorldIT {
 	
-	@Configuration
-	@EnableAsync
-	static class Config{
-	   
-	}
+	
    static String endpointUrl;
 
     @BeforeClass
@@ -60,7 +58,7 @@ public class HelloWorldIT {
         endpointUrl = System.getProperty("service.url");
     }
     
-    @Ignore 
+   @Ignore
     @Test
     public void testPing() throws Exception {
     	Client client = ClientBuilder.newBuilder().newClient();
@@ -128,7 +126,6 @@ public class HelloWorldIT {
     Assert.assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
   }
 
-   @Ignore
    @Test
    public void pingTest() throws Exception
    {
@@ -144,7 +141,7 @@ public class HelloWorldIT {
    }
     
    @Ignore
-   @Async
+   
     public Boolean asyncHttpClient() throws Exception{
     	 RequestConfig requestConfig = RequestConfig.custom()
     	            .setSocketTimeout(20000)

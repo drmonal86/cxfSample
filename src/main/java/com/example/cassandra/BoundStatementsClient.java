@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 /**
  */
 public class BoundStatementsClient extends SimpleClient
@@ -83,21 +86,47 @@ public class BoundStatementsClient extends SimpleClient
 
   }
   
-  public byte[] getTest(){
+  
+  public void insertIntoTable() {
+	  byte[] dataIn = new byte[]{1,2,3};
+      PreparedStatement statement = getSession().prepare("INSERT INTO mdoctor.test_table (id,data) VALUES (?, ?)");
+      BoundStatement boundStatement = new BoundStatement(statement);
+      getSession().execute(boundStatement.bind(123,ByteBuffer.wrap(dataIn)));
+  }
+  
+  public byte[] readFromTable() {
+      String q1 = "SELECT * FROM mdoctor.test_table WHERE id = 123;";
 
-	  ByteBuffer blob=null;
-      ResultSet rows = getSession().execute("SELECT * FROM mdoctor.test_by_score");
-      byte[] results=null;
-        while(!rows.isExhausted()){
-    //  for(Row row: rows){   
-    	 
-    	        Row row= rows.one();
-    	      blob= row.getBytes("test");
-    	     results = Bytes.getArray(blob);
-    	     // result = new byte[blob.remaining()];
-    	   System.out.println(results);
-       
-    }
-        return results;
+      ResultSet results = getSession().execute(q1);
+      for (Row row : results) {
+          ByteBuffer data = row.getBytes("data");
+           byte[] result = new byte[data.remaining()];
+            data.get(result);
+            System.out.println(result[1]);
+            return result;
+      }
+      return null;
+  }
+
+  
+  public ResultSet getTest(){
+      ResultSet resultSet = getSession().execute("SELECT * FROM mdoctor.test_by_score");
+      {  
+        	ByteBuffer bb = resultSet.one().getBytes("test");
+           	byte[] data = new byte[bb.remaining()];
+           bb.get(data);
+           String s1= new String(data);
+        	System.out.println("Data:" +s1);
+        	 try {
+        		 JSONObject jsonObj = new JSONObject(s1);
+				 String value = (String) jsonObj.get("prefix");
+				 System.out.println(value);
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+      }
+        return null;
   }
 }

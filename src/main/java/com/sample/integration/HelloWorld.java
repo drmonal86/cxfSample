@@ -1,5 +1,7 @@
 package com.sample.integration;
 
+import java.util.concurrent.TimeUnit;
+
 import com.example.data.StoreOrder;
 
 import javax.ws.rs.*;
@@ -8,9 +10,12 @@ import javax.ws.rs.core.Response;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
  
 
 @Path("/hello")
+@Component("HelloWorld")
 public class HelloWorld {
 
     @GET
@@ -19,13 +24,14 @@ public class HelloWorld {
     @Async
     public String ping(@PathParam("input") String input) {
     	
+    	System.out.println("Before");
         try {
-           Thread.sleep(5000);
+        	Thread.sleep(10000);  
         } catch (InterruptedException ie) {
 
         }
         System.out.println("Out of sleep");
-        System.out.println("Into Service HelloWorld");
+      
         return input;
     }
 
