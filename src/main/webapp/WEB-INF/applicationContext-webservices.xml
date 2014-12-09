@@ -18,8 +18,9 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
   <import resource="classpath:META-INF/cxf/cxf.xml" />
     <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
 
- 
-  <context:component-scan annotation-config="true" base-package="com.sample" />
+    <import resource="classpath:/applicationContext-cxfSample.xml"/>
+
+  <!--<context:component-scan annotation-config="true" base-package="com.sample" />-->
 <!-- <task:annotation-driven /> -->
 
   <bean class="org.springframework.web.context.support.ServletContextPropertyPlaceholderConfigurer"/>
@@ -27,7 +28,7 @@ http://cxf.apache.org/schemas/jaxrs.xsd">
 
    <jaxrs:server id="services" address="/">
     <jaxrs:serviceBeans>
-      <bean class="com.sample.integration.HelloWorld" />
+        <ref bean="cxfService" />
     </jaxrs:serviceBeans>
     </jaxrs:server>
 
