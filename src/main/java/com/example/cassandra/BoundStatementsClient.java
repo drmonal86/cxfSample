@@ -114,13 +114,24 @@ public class BoundStatementsClient extends SimpleClient
       {  
         	ByteBuffer bb = resultSet.one().getBytes("test");
            	byte[] data = new byte[bb.remaining()];
-           bb.get(data);
-           String s1= new String(data);
+           	bb.get(data);
+           	String s1= new String(data);
         	System.out.println("Data:" +s1);
+        	String value = null;
+        
         	 try {
         		 JSONObject jsonObj = new JSONObject(s1);
-				 String value = (String) jsonObj.get("prefix");
-				 System.out.println(value);
+        		 System.out.println(jsonObj);
+        		 if (jsonObj.isNull("prefix"))
+        		 {
+        			 System.out.println("Inside Null");
+        		 }
+        		 else
+        		 {
+        			  value = (String) jsonObj.get("prefix");
+        		   	  System.out.println(value);
+        		 }
+				
 				
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block

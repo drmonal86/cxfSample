@@ -2,6 +2,7 @@ package com.example.cassandra;
 
 import java.nio.ByteBuffer;
 import java.util.List;
+
 import com.datastax.driver.core.BoundStatement;
 
 
@@ -10,6 +11,8 @@ import com.datastax.driver.core.ResultSet;
 import org.junit.*;
 
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -52,14 +55,14 @@ public class BoundStatementsClientTest
     boundStatementsClient.close();
   }
 
- @Ignore
+
   @Test
   public void getListClient(){
 	  	BoundStatementsClient boundStatementsClient = new BoundStatementsClient();
 	    boundStatementsClient.connect(CASSANDRA_IP);
 	  //  boundStatementsClient.insertIntoTable();
 	    ResultSet dataOut = boundStatementsClient.getTest();
-
+	    
 	    boundStatementsClient.close();
   }
 }
